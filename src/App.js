@@ -134,7 +134,7 @@ export default function App() {
           {rectData[imageIndex] &&
             rectData[imageIndex].map((rect, index) => (
               <BoundingBox 
-              shapeProps={{...rect, stroke:index === currentRectIndex ? "red" : "black" , strokeWidth : 2 }} 
+              shapeProps={{...rect, stroke:index === currentRectIndex ? "green" : "red" , strokeWidth : 2 }} 
               isSelected={index === currentRectIndex} onSelect={() => setCurrentRectIndex(index)} 
               onChange={(rect)=>handleRectTransform(index, rect)}/>
             ))}
