@@ -1,0 +1,25 @@
+.container{
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+    width: 100%;
+    padding :64px;
+    max-width: 1136px;
+  }
+  .buttonsWrapper{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin: 16px ;
+    .button{
+        background-color: white;
+        border: 1px solid grey;;
+        border-radius: 0.25rem;
+        padding: 0.25rem 0.5rem;
+        &:not(:last-child){
+            margin-right: 16px;
+        }
+    }
+  }
