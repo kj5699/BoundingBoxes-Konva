@@ -41,7 +41,7 @@ const BoundingBox = ({ shapeProps, isSelected, onSelect, onChange }) => {
             keepRatio={false}
             anchorSize={8}
             borderDash={[6, 2]}
-            borderColor="#22A6B3"
+            borderColor="red"
         />
         )}
         </React.Fragment>) 

@@ -41,35 +41,14 @@ export default function App() {
 
   const onMouseDownHandler = (event) => {
     const clickedOnEmpty = event.target === event.target.getLayer().children[0];
-    console.log(clickedOnEmpty, event.target , event.target.getLayer().children[0]);
     if (clickedOnEmpty) {
       setCurrentRectIndex(null);
       isDragging.current = true;
       const pos = event.target.getStage().getPointerPosition();
       setCurrentPos([pos.x, pos.y]);
       dragRectIndex.current = rectData[imageIndex]?.length || 0;
-      setRectData((prev) => {
-        let updatedData = { ...prev };
-        let updatedRects = updatedData[imageIndex]
-          ? [...updatedData[imageIndex]]
-          : [];
-        let newRect = {
-          x: pos.x,
-          y: pos.y,
-          width: 0,
-          height: 0,
-          rotation: 0,
-          scaleX: 1,
-          scaleY: 1
-        };
-        updatedRects.push(newRect);
-        updatedData[imageIndex] = updatedRects;
-        return updatedData;
-      });
-    }
-
-  };
-  console.log("currentPos", currentPos);
+   };
+  }
   const onMouseMoveHandler = (event) => {
     if (isDragging.current) {
       const pos = event.target.getStage().getPointerPosition();
@@ -87,8 +66,10 @@ export default function App() {
           scaleX: 1,
           scaleY: 1
         };
-        updatedRects.splice(dragRectIndex.current, 1, newRect);
-        updatedData[imageIndex] = updatedRects;
+        if (newRect.width > 0 && newRect.height > 0){
+          updatedRects.splice(dragRectIndex.current, 1, newRect);
+          updatedData[imageIndex] = updatedRects;
+        }
         return updatedData;
       });
     }
@@ -100,7 +81,6 @@ export default function App() {
       isDragging.current = false;
     }
   };
-  console.log("Rect Data", rectData);
   const handleRectTransform = (index, rect ) => {
     setRectData((prevRectangles) => {
       const updatedData = {...prevRectangles};
@@ -111,10 +91,21 @@ export default function App() {
     });
   };
   const onSaveHandler = () => {
-    console.log(rectData[imageIndex]);
+    let currectImgRectData = rectData[imageIndex];
+    let widthRatio = (currentImage.width / 500).toFixed(2);
+    let heightRatio = (currentImage.height / 500).toFixed(2);
+    let result = currectImgRectData.map(item => {
+      return {
+        x1 : Math.floor(item.x * widthRatio),
+        x2 : Math.floor((item.x + item.width)* widthRatio),
+        y1 : Math.floor(item.y * heightRatio),
+        y2 : Math.floor((item.y + item.width)* heightRatio),
+      }
+    })
+    console.log(result);
   }
   const deleteBoxhandler = () => {
-    if(currentRectIndex){
+    if(currentRectIndex !== null){
       setRectData((prevRectangles) => {
         const updatedData = {...prevRectangles};
         const currentRects = [...updatedData[imageIndex]];
@@ -143,7 +134,7 @@ export default function App() {
           {rectData[imageIndex] &&
             rectData[imageIndex].map((rect, index) => (
               <BoundingBox 
-              shapeProps={{...rect, stroke:index === currentRectIndex ? "red" : "black" ,strokeWidth : 2 }} 
+              shapeProps={{...rect, stroke:index === currentRectIndex ? "red" : "black" , strokeWidth : 2 }} 
               isSelected={index === currentRectIndex} onSelect={() => setCurrentRectIndex(index)} 
               onChange={(rect)=>handleRectTransform(index, rect)}/>
             ))}
@@ -159,12 +150,11 @@ export default function App() {
         <button onClick={onSaveHandler} className={styles.button}>
           Save 
         </button>
-        {currentRectIndex && 
+        {currentRectIndex !== null ? 
           <button onClick={deleteBoxhandler} className={styles.button}>
             Delete 
-          </button>
+          </button> : null
         }
-
       </div>
 
     </div>
